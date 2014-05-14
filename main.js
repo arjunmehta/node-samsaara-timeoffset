@@ -4,7 +4,7 @@
  * MIT Licensed
  */
 
-var helper = require('./helper');
+var debug = require('debug')('samsaara:timeOffset');
 
 function timeOffset(options){
 
@@ -37,7 +37,7 @@ function timeOffset(options){
       };
 
     if(opts.timeOffset !== undefined){
-      console.log("Initializing Time Offset...");
+      debug("Initializing Time Offset...");
       if(opts.timeOffset === "force") attributes.force("timeOffset");
       testTime(connection.id);
     }
@@ -49,7 +49,6 @@ function timeOffset(options){
    */
 
   function testTime (connID){
-    // console.log("Testing Time...");
     var currentTime = new Date().getTime();
     if(connections[connID].connectionTimings.afterMin < 10000000000){
       communication.sendToClient(connID, {internal: "testTime", args:[( connections[connID].connectionTimings.afterMin ), currentTime]}, testTimeReturn);
@@ -79,7 +78,7 @@ function timeOffset(options){
     connection.connectionTimings.latencies.push( latency );
     connection.connectionTimings.measurableDifferences.push( measurableDifference );
 
-    var currenAfterMin = helper.min(connection.connectionTimings.measurableDifferences);
+    var currenAfterMin = min(connection.connectionTimings.measurableDifferences);
     if (currenAfterMin < connection.connectionTimings.afterMin) {
       connection.connectionTimings.afterMin = currenAfterMin;
     }
@@ -90,13 +89,13 @@ function timeOffset(options){
       connection.connectionTimings.clientOffsetGuesses.push( measurableDifference - lagBehind );
     }
 
-    connection.connectionTimings.clientOffset = helper.median(connection.connectionTimings.clientOffsetGuesses);
+    connection.connectionTimings.clientOffset = median(connection.connectionTimings.clientOffsetGuesses);
 
     if(connection.connectionTimings.latencies.length < connection.connectionTimings.timeAccuracy){
       testTime(connection.id);
     }
     else{
-      console.log(config.uuid, "TimeOffset", connection.id, "Time Offset:", connection.connectionTimings.clientOffset);
+      debug("TimeOffset", connection.id, "Time Offset:", connection.connectionTimings.clientOffset);
 
       connection.updateDataAttribute("timeOffset", connection.connectionTimings.clientOffset);
       communication.sendToClient(connection.id, {internal: "updateOffset", args: [connection.connectionTimings.clientOffset]});
@@ -148,3 +147,44 @@ function timeOffset(options){
 }
 
 module.exports = exports = timeOffset;
+
+
+function min(arr){
+  if (!isArray(arr)) {
+    return false;
+  }
+
+  var arrMod = [];
+  for(var i=0; i<arr.length; i++){
+    arrMod.push(arr[i]);
+  }
+
+  arrMod.sort(function(a, b) {
+    return a - b;
+  });
+
+  return arrMod[0];
+}
+
+function median(arr) {
+  if (!isArray(arr)) {
+    return false;
+  }
+  
+  var arrMod = [];
+  for(var i=0; i<arr.length; i++){
+    arrMod.push(arr[i]);
+  }
+  
+  arrMod.sort(function(a, b) {
+    return a - b;
+  });
+
+  var half = Math.floor(arrMod.length / 2);
+  if (arrMod.length % 2) return arrMod[half];
+  else return (arrMod[half - 1] + arrMod[half]) / 2;
+}
+
+function isArray(arr) {
+  return Object.prototype.toString.call(arr) === "[object Array]";
+}
