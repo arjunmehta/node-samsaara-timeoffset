@@ -130,6 +130,8 @@ function timeOffset(options){
 
       name: "timeOffset",
 
+      clientScript: __dirname + '/client/samsaara-timeoffset.js', 
+
       connectionInitialization: {
         timeOffset: connectionInitialzation
       },
