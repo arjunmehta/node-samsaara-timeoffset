@@ -13,6 +13,10 @@ function timeOffset(options){
       communication,
       ipc;
 
+  options = options || {};
+
+  var timeAccuracy = options.accuracy || 7;
+
 
   /**
    * Connection Initialization Methods
@@ -32,8 +36,7 @@ function timeOffset(options){
         measurableDifferences: [],
         clientOffsetGuesses: [],
         afterMin: 10000000000000000000,
-        clientOffset: 0,
-        timeAccuracy: 7
+        clientOffset: 0
       };
 
     if(opts.timeOffset !== undefined){
@@ -64,41 +67,46 @@ function timeOffset(options){
   function testTimeReturn (originalTime, clientTime, timeError){
 
     var connection = this.connection;
+    var connectionTimings = connection.connectionTimings;
 
     var currentTime = new Date().getTime();
     var latency = currentTime - originalTime;
     var measurableDifference = currentTime - clientTime;
 
-    if(connection.connectionTimings.latencies.length > connection.connectionTimings.timeAccuracy){
-      connection.connectionTimings.latencies.shift();
-      connection.connectionTimings.measurableDifferences.shift();
-      connection.connectionTimings.clientOffsetGuesses.shift();
+    var latencies = connection.connectionTimings.latencies;
+    var measurableDifferences = connection.connectionTimings.measurableDifferences;
+    var clientOffsetGuesses = connection.connectionTimings.clientOffsetGuesses;
+
+    if(latencies.length > timeAccuracy){
+      latencies.shift();
+      measurableDifferences.shift();
+      clientOffsetGuesses.shift();
     }
 
-    connection.connectionTimings.latencies.push( latency );
-    connection.connectionTimings.measurableDifferences.push( measurableDifference );
+    latencies.push( latency );
+    measurableDifferences.push( measurableDifference );
 
-    var currenAfterMin = min(connection.connectionTimings.measurableDifferences);
-    if (currenAfterMin < connection.connectionTimings.afterMin) {
-      connection.connectionTimings.afterMin = currenAfterMin;
+    var currenAfterMin = min(measurableDifferences);
+    if (currenAfterMin < connectionTimings.afterMin) {
+      connectionTimings.afterMin = currenAfterMin;
     }
 
     var lagBehind = latency - timeError;
 
-    if(connection.connectionTimings.latencies.length > 2){
-      connection.connectionTimings.clientOffsetGuesses.push( measurableDifference - lagBehind );
+    if(latencies.length > 2){
+      clientOffsetGuesses.push( measurableDifference - lagBehind );
     }
 
-    connection.connectionTimings.clientOffset = median(connection.connectionTimings.clientOffsetGuesses);
+    connectionTimings.clientOffset = median(clientOffsetGuesses);
 
-    if(connection.connectionTimings.latencies.length < connection.connectionTimings.timeAccuracy){
+    if(latencies.length < timeAccuracy){
       testTime(connection.id);
     }
     else{
-      debug("TimeOffset", connection.id, "Time Offset:", connection.connectionTimings.clientOffset);
+      debug("TimeOffset", connection.id, "Time Offset:", connectionTimings.clientOffset);
 
-      connection.updateDataAttribute("timeOffset", connection.connectionTimings.clientOffset);
-      communication.sendToClient(connection.id, {internal: "updateOffset", args: [connection.connectionTimings.clientOffset]});
+      connection.updateDataAttribute("timeOffset", connectionTimings.clientOffset);
+      communication.sendToClient(connection.id, {internal: "updateOffset", args: [connectionTimings.clientOffset]});
       connection.initializeAttributes.initialized(null, "timeOffset");
       delete connection.connectionTimings;
     }
