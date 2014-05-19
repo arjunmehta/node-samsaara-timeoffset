@@ -42,7 +42,7 @@ function timeOffset(options){
     if(opts.timeOffset !== undefined){
       debug("Initializing Time Offset...");
       if(opts.timeOffset === "force") attributes.force("timeOffset");
-      testTime(connection.id);
+      testTime(connection);
     }
   }
 
@@ -51,13 +51,13 @@ function timeOffset(options){
    * Foundation Methods
    */
 
-  function testTime (connID){
+  function testTime (connection){
     var currentTime = new Date().getTime();
-    if(connections[connID].connectionTimings.afterMin < 10000000000){
-      communication.sendToClient(connID, {internal: "testTime", args:[( connections[connID].connectionTimings.afterMin ), currentTime]}, testTimeReturn);
+    if(connection.connectionTimings.afterMin < 10000000000){
+      connection.execute({internal: "testTime", args:[( connection.connectionTimings.afterMin ), currentTime]}, testTimeReturn);
     }
     else{
-      communication.sendToClient(connID, {internal: "testTime", args:[0, currentTime]}, testTimeReturn);
+      connection.execute({internal: "testTime", args:[0, currentTime]}, testTimeReturn);
     }
   }
 
@@ -100,13 +100,13 @@ function timeOffset(options){
     connectionTimings.clientOffset = median(clientOffsetGuesses);
 
     if(latencies.length < timeAccuracy){
-      testTime(connection.id);
+      testTime(connection);
     }
     else{
       debug("TimeOffset", connection.id, "Time Offset:", connectionTimings.clientOffset);
 
       connection.updateDataAttribute("timeOffset", connectionTimings.clientOffset);
-      communication.sendToClient(connection.id, {internal: "updateOffset", args: [connectionTimings.clientOffset]});
+      connection.execute({internal: "updateOffset", args: [connectionTimings.clientOffset]});
       connection.initializeAttributes.initialized(null, "timeOffset");
       delete connection.connectionTimings;
     }
@@ -129,7 +129,7 @@ function timeOffset(options){
     connectionController = samsaaraCore.connectionController;
     connections = connectionController.connections;
     communication = samsaaraCore.communication;
-    ipc = samsaaraCore.ipcRedis;
+    ipc = samsaaraCore.ipc;
 
     samsaaraCore.addClientFileRoute("samsaara-timeoffset.js", __dirname + '/client/samsaara-timeoffset.js');
 
