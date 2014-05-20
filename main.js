@@ -143,8 +143,8 @@ function timeOffset(options){
         timeOffset: connectionInitialzation
       },
 
-      foundationMethods: {
-        testTime: testTime
+      moduleExports: {
+        testTime: testTime // maybe we should add this to the Connection prototype?
       }
     };
 
@@ -153,6 +153,7 @@ function timeOffset(options){
   };
 
 }
+
 
 module.exports = exports = timeOffset;
 
