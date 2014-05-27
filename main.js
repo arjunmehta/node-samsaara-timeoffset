@@ -54,10 +54,10 @@ function timeOffset(options){
   function testTime (connection){
     var currentTime = new Date().getTime();
     if(connection.connectionTimings.afterMin < 10000000000){
-      connection.execute({internal: "testTime", args:[( connection.connectionTimings.afterMin ), currentTime]}, testTimeReturn);
+      connection.executeRaw({ns:"internal", func: "testTime", args:[( connection.connectionTimings.afterMin ), currentTime]}, testTimeReturn);
     }
     else{
-      connection.execute({internal: "testTime", args:[0, currentTime]}, testTimeReturn);
+      connection.executeRaw({ns:"internal", func: "testTime", args:[0, currentTime]}, testTimeReturn);
     }
   }
 
@@ -106,7 +106,7 @@ function timeOffset(options){
       debug("TimeOffset", connection.id, "Time Offset:", connectionTimings.clientOffset);
 
       connection.updateDataAttribute("timeOffset", connectionTimings.clientOffset);
-      connection.execute({internal: "updateOffset", args: [connectionTimings.clientOffset]});
+      connection.executeRaw({ns:"internal", func: "updateOffset", args: [connectionTimings.clientOffset]});
       connection.initializeAttributes.initialized(null, "timeOffset");
       delete connection.connectionTimings;
     }
