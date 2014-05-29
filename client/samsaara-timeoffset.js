@@ -15,7 +15,7 @@ var timeoffset = (function(module){
       if(typeof callBack === "function") callBack(serverTime, theTime, errorDifference);
     },
     updateOffset: function (timeOffset){
-      console.log("Samsaara: updateOffset():", timeOffset);
+      console.log("samsaara: updateOffset():", timeOffset);
       samsaara.timeOffset = timeOffset;
     }
   };
