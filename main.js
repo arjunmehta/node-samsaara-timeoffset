@@ -52,7 +52,7 @@ function timeOffset(options){
    */
 
   function testTime (connection){
-    var currentTime = new Date().getTime();
+    var currentTime = Date.now();
     if(connection.connectionTimings.afterMin < 10000000000){
       connection.executeRaw({ns:"internal", func: "testTime", args:[( connection.connectionTimings.afterMin ), currentTime]}, testTimeReturn);
     }
@@ -66,10 +66,10 @@ function timeOffset(options){
 
   function testTimeReturn (originalTime, clientTime, timeError){
 
-    var connection = this.connection;
+    var connection = this;
     var connectionTimings = connection.connectionTimings;
 
-    var currentTime = new Date().getTime();
+    var currentTime = Date.now();
     var latency = currentTime - originalTime;
     var measurableDifference = currentTime - clientTime;
 
