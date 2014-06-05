@@ -143,7 +143,6 @@ function testTimeReturn (originalTime, clientTime, timeError){
     connection.initializeAttributes.initialized(null, "timeOffset");
     delete connection.connectionTimings;
   }
-
 }
 
 
