@@ -1,22 +1,38 @@
 {
-  "name": "samsaara-timeoffset",
-  "version": "0.0.0",
-  "description": "node-samsaara-timeOffset ========================",
-  "main": "main.js",
-  "dependencies": {
-    "debug" : "~0.8.1"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/arjunmehta/node-samsaara-timeoffset.git"
-  },
-  "author": "Arjun Mehta",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/arjunmehta/node-samsaara-timeoffset/issues"
-  },
-  "homepage": "https://github.com/arjunmehta/node-samsaara-timeoffset"
+    "name": "samsaara-timeoffset",
+    "version": "1.0.0-beta.1",
+    "description": "Samsaara middleware to calculate the difference between client and server clocks.",
+    "main": "main.js",
+    "dependencies": {
+        "debugit": "~1.0.1"
+    },
+    "devDependencies": {
+        "browserify": "~10.2.4",
+        "es5-shim": "~4.1.10",
+        "ghostface": "~1.4.0",
+        "multiview": "~2.2.5",
+        "phantomjs": "~1.9.18",
+        "tape": "~4.2.0",
+        "ws": "~0.8.0",
+        "samsaara": "git://github.com/arjunmehta/node-samsaara.git"
+    },
+    "scripts": {
+        "test": "multiview [browserify test/client.js '|' ghostface] [tape test/test.js] -x 1000",
+        "test-multi": "multiview [browserify test/clientB.js '|' ghostface] [tape test/test.js]"
+    },
+    "keywords": [
+        "samsaara",
+        "time offset",
+        "clocks"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/arjunmehta/node-samsaara-timeoffset.git"
+    },
+    "author": "Arjun Mehta",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/arjunmehta/node-samsaara-timeoffset/issues"
+    },
+    "homepage": "https://github.com/arjunmehta/node-samsaara-timeoffset"
 }
