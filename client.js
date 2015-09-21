@@ -12,7 +12,7 @@ var clientOffset = 0;
 var clientOffsetGuesses = [];
 var latencies = [];
 var measurableDifferences = [];
-var afterMin;
+var afterMin = 1000000000000000;
 
 var doneInitialization;
 var samsaara;
@@ -82,7 +82,7 @@ function testTimeReturn(originalTime, clientTime, errorDifference) {
     clientOffset = median(clientOffsetGuesses);
 
     if (latencies.length < timeAccuracy) {
-        testTime();
+        continueToTestTime();
     } else {
         debug('Time Offset:', clientOffset);
 
@@ -95,14 +95,14 @@ function testTimeReturn(originalTime, clientTime, errorDifference) {
 
 
 function testTime() {
-
     var currentTime = new Date().getTime();
+    samsaara.core.nameSpace('samsaaraTimeOffset').execute('testTime')(0, currentTime, testTimeReturn);
+}
 
-    if (afterMin === undefined) {
-        samsaara.core.nameSpace('samsaaraTimeOffset').execute('testTime')(0, currentTime, testTimeReturn);
-    } else {
-        samsaara.core.nameSpace('samsaaraTimeOffset').execute('testTime')(afterMin, currentTime, testTimeReturn);
-    }
+
+function continueToTestTime() {
+    var currentTime = new Date().getTime();
+    samsaara.core.nameSpace('samsaaraTimeOffset').execute('testTime')(afterMin, currentTime, testTimeReturn);
 }
 
 

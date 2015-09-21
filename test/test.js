@@ -44,6 +44,7 @@ test('Samsaara Server Exists', function(t) {
 });
 
 test('Samsaara can load TimeOffset middleware', function(t) {
+    console.log('JUST CHECKING');
     samsaara.use(timeOffset, {
         forced: true
     });
@@ -71,7 +72,7 @@ test('Wait for X Connections', function(t) {
 
 test('Hold Test', function(t) {
     setTimeout(function() {
-        samsaara.group('all').execute('continueTest')();
+        samsaara.connection('connection0').execute('continueTest')();
         t.end();
     }, 500);
 });

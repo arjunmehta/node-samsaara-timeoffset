@@ -18,7 +18,7 @@
     },
     "scripts": {
         "test": "multiview [browserify test/client.js '|' ghostface] [tape test/test.js] -x 1000",
-        "test-multi": "multiview [browserify test/clientB.js '|' ghostface] [tape test/test.js]"
+        "test-multi": "multiview [browserify test/client.js '|' ghostface] [tape test/test.js]"
     },
     "keywords": [
         "samsaara",
