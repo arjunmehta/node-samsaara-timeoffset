@@ -17,6 +17,7 @@ module.exports = {
 
         samsaara = extender.core;
 
+        extender.addConnectionMethods(this.connectionMethods);
         extender.addConnectionInitialization(this.connectionInitialization, {
             forced: options.forced ? true : false
         });
@@ -42,8 +43,24 @@ module.exports = {
         }
     },
 
+    connectionMethods: {
+        getTimeOffset: function(cb) {
+            this.nameSpace('samsaaraTimeOffset').execute('getTimeOffset')(function(clientOffset) {
+                debug('Client Offset', clientOffset);
+
+                this.setState({
+                    timeOffset: clientOffset
+                });
+
+                if (typeof cb === 'function') {
+                    cb(clientOffset);
+                }
+            });
+        }
+    },
+
     connectionInitialization: function(connection, done) {
-        connection.nameSpace('samsaaraTimeOffset').execute('testTimeOffset')(function(clientOffset) {
+        connection.nameSpace('samsaaraTimeOffset').execute('getTimeOffset')(function(clientOffset) {
             debug('Client Offset', clientOffset);
 
             this.setState({
