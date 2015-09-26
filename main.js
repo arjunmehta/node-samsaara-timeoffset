@@ -18,9 +18,12 @@ module.exports = {
         samsaara = extender.core;
 
         extender.addConnectionMethods(this.connectionMethods);
-        extender.addConnectionInitialization(this.connectionInitialization, {
-            forced: options.forced ? true : false
-        });
+
+        if (options.onConnection) {
+            extender.addConnectionInitialization(this.connectionInitialization, {
+                forced: options.onConnection === 'required' ? true : false
+            });
+        }
 
         samsaara.createNamespace('samsaaraTimeOffset', this.exposedMethods);
 

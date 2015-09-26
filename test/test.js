@@ -45,7 +45,7 @@ test('Samsaara Server Exists', function(t) {
 
 test('Samsaara can load TimeOffset middleware', function(t) {
     samsaara.use(timeOffset, {
-        forced: true
+        onConnection: 'required'
     });
     t.end();
 });

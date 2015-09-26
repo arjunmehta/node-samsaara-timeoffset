@@ -46,14 +46,18 @@ A negative offset value means the client's clock is behind the server. And a pos
 
 ### Server Side
 
-Just add the timeoffset middleware to your samsaara instance. You can pass in the `forced` option to configure whether timeoffset is required before initialization. If you're not familiar with what this means, definitely read this section in the samsaara readme about initialization.
+Just add the timeoffset middleware to your samsaara instance. 
+
+Use the `onConnection` option to get the connecting client's timeOffset when they connect. Set it to `'required'` if the query is a requirement for `initialization`. If you're not familiar with what this means, definitely read this section in the samsaara readme about initialization.
 
 ```javascript
 var samsaara = require('samsaara')
 var timeOffset = require('samsaara-timeoffset')
 
 samsaara
-  .use(timeOffset, {forced: true})
+  .use(timeOffset, {
+    onConnection: 'required' // or true or false
+  })
   .initialize({
     socketType: 'ws'
   })
