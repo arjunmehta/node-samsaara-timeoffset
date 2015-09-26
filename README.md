@@ -22,7 +22,7 @@ In order to capture and calculate the time differential of clients you must add 
 
 ```javascript
 var samsaara = require('samsaara')
-var timeOffset = require('samsaara-timeOffset')
+var timeOffset = require('samsaara-timeoffset')
 
 samsaara
   .use(timeOffset)
@@ -36,11 +36,12 @@ Set listeners to do something when the client time offset has been calculated.
 
 ```javascript
 samsaara.on('time offset', function(offset){
-  console.log('This client is', offset, 'milliseconds off from the server')
+  console.log('This client is', offset, 'milliseconds ahead of the server')
 })
 ```
 
 #### Get offset value.
+A negative offset value means the client's clock is behind the server. And a positive value means the client's clock is ahead of the server.
 
 
 ### Server Side
@@ -58,7 +59,20 @@ samsaara
   })
 ```
 
-#### Get Offset State
+#### Get Connection's Time Offset
+You can get the last updated connection time offset by referring to the connection's `state` object. This only works if the connection's offset has been queried before, but may not be the most accurate value.
+
+```javascript
+var offset = connection.state.timeOffset;
+```
+
+If you want to update the state or force a recalculation of the connection's offset:
+
+```javascript
+connection.getTimeOffset(function(offset){
+  console.log('This connection\'s time offset is:', offset)
+})
+```
 
 
 ## License
