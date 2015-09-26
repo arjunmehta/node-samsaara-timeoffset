@@ -96,6 +96,7 @@ function testTimeReturn(originalTime, clientTime, errorDifference) {
 
 function testTime() {
     var currentTime = new Date().getTime();
+    latencies = [];
     samsaara.core.nameSpace('samsaaraTimeOffset').execute('testTime')(0, currentTime, testTimeReturn);
 }
 
