@@ -42,7 +42,7 @@ module.exports = {
     },
 
     exposedMethods: {
-        testTimeOffset: function(cb) {
+        getTimeOffset: function(cb) {
             doneInitialization = cb;
             testTime();
         }
