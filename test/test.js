@@ -44,7 +44,6 @@ test('Samsaara Server Exists', function(t) {
 });
 
 test('Samsaara can load TimeOffset middleware', function(t) {
-    console.log('JUST CHECKING');
     samsaara.use(timeOffset, {
         forced: true
     });
@@ -66,6 +65,13 @@ test('Wait for X Connections', function(t) {
 
         debug('Client offset is:', samsaara.connection('connection0').state.timeOffset);
 
+        t.end();
+    });
+});
+
+test('Get TimeOffset', function(t) {
+    samsaara.connection('connection0').getTimeOffset(function(offset) {
+        t.equal(typeof offset, 'number');
         t.end();
     });
 });

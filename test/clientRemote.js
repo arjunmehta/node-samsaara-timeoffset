@@ -35,7 +35,7 @@ test('Samsaara can load Groups middleware', function(t) {
     t.end();
 });
 
-test('Samsaara initializes and added to All', function(t) {
+test('Samsaara initializes', function(t) {
 
     ws = new WebSocket('ws://remoteURL:8080');
 
